@@ -73,6 +73,7 @@ export interface PrBodyStruct {
 export interface Pr {
   bodyStruct?: PrBodyStruct;
   sourceBranch: string;
+  commitSha?: string; // for the gerrit platform the sourceBranch does not really exist. Instead pass a commitSha to compare against the parent commit
   cannotMergeReason?: string; // for reflecting platform policies which may prevent merging
   createdAt?: string;
   closedAt?: string;

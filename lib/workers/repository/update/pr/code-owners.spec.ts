@@ -20,11 +20,20 @@ describe('workers/repository/update/pr/code-owners', () => {
 
     beforeEach(() => {
       pr = mock<Pr>();
+      pr.commitSha = undefined;
     });
 
     it('returns global code owner', async () => {
       fs.readLocalFile.mockResolvedValueOnce(['* @jimmy'].join('\n'));
       git.getBranchFiles.mockResolvedValueOnce(['README.md']);
+      const codeOwners = await codeOwnersForPr(pr);
+      expect(codeOwners).toEqual(['@jimmy']);
+    });
+
+    it('returns global code owner for gerrit', async () => {
+      pr.commitSha = 'somecommmit';
+      fs.readLocalFile.mockResolvedValueOnce(['* @jimmy'].join('\n'));
+      git.getBranchFilesFromCommit.mockResolvedValueOnce(['README.md']);
       const codeOwners = await codeOwnersForPr(pr);
       expect(codeOwners).toEqual(['@jimmy']);
     });
