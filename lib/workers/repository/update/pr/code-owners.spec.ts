@@ -4,6 +4,8 @@ import type { Pr } from '../../../../modules/platform';
 import * as gitlab from '../../../../modules/platform/gitlab';
 import { codeOwnersForPr } from './code-owners';
 import { fs, git, platform } from '~test/util';
+import { GlobalConfig } from '../../../../config/global';
+import { LongCommitSha } from '../../../../util/git/types';
 
 vi.mock('../../../../util/fs');
 
@@ -14,13 +16,15 @@ describe('workers/repository/update/pr/code-owners', () => {
       writable: true,
     });
   });
+  beforeEach(() => {
+    GlobalConfig.reset();
+  });
 
   describe('codeOwnersForPr', () => {
     let pr: Pr;
 
     beforeEach(() => {
       pr = mock<Pr>();
-      pr.commitSha = undefined;
     });
 
     it('returns global code owner', async () => {
@@ -31,7 +35,10 @@ describe('workers/repository/update/pr/code-owners', () => {
     });
 
     it('returns global code owner for gerrit', async () => {
-      pr.commitSha = 'somecommmit';
+      GlobalConfig.set({
+        platform: 'gerrit',
+      });
+      pr.sha = 'f7374c2de8a4c95a7fd7182ab24044e3896aac02' as LongCommitSha;
       fs.readLocalFile.mockResolvedValueOnce(['* @jimmy'].join('\n'));
       git.getBranchFilesFromCommit.mockResolvedValueOnce(['README.md']);
       const codeOwners = await codeOwnersForPr(pr);

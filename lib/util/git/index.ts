@@ -1048,7 +1048,7 @@ export async function getBranchFiles(
 }
 
 export async function getBranchFilesFromCommit(
-  referenceCommit: string,
+  referenceCommit: LongCommitSha,
 ): Promise<string[] | null> {
   await syncGit();
   try {

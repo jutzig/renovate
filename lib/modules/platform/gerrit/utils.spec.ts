@@ -120,7 +120,6 @@ describe('modules/platform/gerrit/utils', () => {
         createdAt: '2025-04-14T16:33:37.000000000',
         sourceBranch: 'renovate/dependency-1.x',
         targetBranch: 'main',
-        commitSha: 'abc',
         reviewers: ['username'],
         bodyStruct: {
           hash: hashBody('Last PR-Body'),
